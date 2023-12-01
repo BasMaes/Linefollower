@@ -1,0 +1,41 @@
+const int motor1PWM = 9;
+const int motor1Direction = 10;
+const int motor2PWM = 5;
+const int motor2Direction = 6;
+
+void setup() {
+  pinMode(motor1PWM, OUTPUT);
+  pinMode(motor1Direction, OUTPUT);
+  pinMode(motor2PWM, OUTPUT);
+  pinMode(motor2Direction, OUTPUT);
+}
+
+void loop() {
+  // Motor 1 vooruit
+  digitalWrite(motor1Direction, HIGH);
+  analogWrite(motor1PWM, 150);  // Stel de snelheid in tussen 0 (minimale snelheid) en 255 (maximale snelheid)
+  delay(2000);
+
+  // Motor 1 achteruit
+  digitalWrite(motor1Direction, LOW);
+  analogWrite(motor1PWM, 225);  // Stel de snelheid in tussen 0 (minimale snelheid) en 255 (maximale snelheid)
+  delay(2000);
+
+  // Stop motor 1
+  analogWrite(motor1PWM, 0);
+  delay(1000);
+
+  // Motor 2 vooruit
+  digitalWrite(motor2Direction, HIGH);
+  analogWrite(motor2PWM, 200);  // Stel de snelheid in tussen 0 (minimale snelheid) en 255 (maximale snelheid)
+  delay(2000);
+
+  // Motor 2 achteruit
+  digitalWrite(motor2Direction, LOW);
+  analogWrite(motor2PWM, 100);  // Stel de snelheid in tussen 0 (minimale snelheid) en 255 (maximale snelheid)
+  delay(2000);
+
+  // Stop motor 2
+  analogWrite(motor2PWM, 0);
+  delay(1000);
+}
