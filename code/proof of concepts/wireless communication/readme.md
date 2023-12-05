@@ -2,60 +2,27 @@
 minimale hard- en software waarmee aangetoond wordt dat duplex kan gecommuniceerd worden tussen de microcontroller en een smartphone, gebruik makend van HC-05 bluetooth module. 
 <br />
 ### code
-#include "Arduino.h"
-#include <SoftwareSerial.h>
- 
-const byte rxPin = 8;
-const byte txPin = 9;
-int interruptPin = 2;
-const int ledPin = 13;
-char DataFromRobot;
-char DataFromPhone;
-bool state = LOW;
-SoftwareSerial BTSerial(rxPin, txPin); // RX TX
- 
-void setup() {
-// define pin modes for tx, rx:
-pinMode(rxPin, INPUT);
-pinMode(txPin, OUTPUT);
-pinMode(ledPin, OUTPUT);
-pinMode(interruptPin, INPUT);
-attachInterrupt(digitalPinToInterrupt(interruptPin), interrupt, RISING);
-BTSerial.begin(9600);
-Serial.begin(9600);
-}
- 
-void loop() {
+![image](https://github.com/BasMaes/Linefollower/assets/146442899/055e3fbc-ed6a-4a71-8643-47a1a9ee89d2)
 
-//data die ontvangen wordt vanuit de bluetoothmodule
-if (BTSerial.available() > 0) {
-  DataFromPhone = BTSerial.read();
-  Serial.write(DataFromPhone); //stuurt data van gsm naar seriele monitor
-}
-if (Serial.available() > 0 ) {
-  DataFromRobot = Serial.read();
-  BTSerial.write(DataFromRobot); //stuurt data van seriele monitor naar gsm
-}
-  
-  // zet de built-in LED aan als deze wordt bediend door de knop op de gsm
-  if (DataFromPhone == '0') {
-    digitalWrite(ledPin, LOW);
-  }
-  else if (DataFromPhone == '1') {
-    digitalWrite(ledPin, HIGH);
-  }
-}
-
-void interrupt() {
- static unsigned long vorigeInterrupt = 0;
- unsigned long interruptTijd = millis();
- if (interruptTijd - vorigeInterrupt > 200){
- BTSerial.write("De knop is ingedrukt!"); // stuurt door als de knop wordt ingedrukt naar de gsm
- }
- vorigeInterrupt = interruptTijd;
-}
 
 ### opmerkingen
 
+Dit Arduino-programma maakt gebruik van een Bluetooth-module en een knop om communicatie met een GSM-module mogelijk te maken. Het ontvangt commando's van de GSM via Bluetooth en stuurt deze naar de seriele monitor. Het schakelt een LED in of uit op basis van de ontvangen commando's ('1' om in te schakelen, '0' om uit te schakelen). Een interrupt-functie detecteert een knopdruk en stuurt een bericht naar de GSM-module.
+
 ### gebruiksaanwijzing
+1. Zet de GSM-module en de Arduino aan.
+2. Koppel je GSM via Bluetooth met de Arduino.
+3. Gebruik een GSM-app om opdrachten ('0' om de LED uit te schakelen, '1' om de LED in te schakelen) naar de Arduino te sturen.
+4. Druk op de fysieke knop om een interrupt te activeren en een bericht naar de GSM te sturen.
+
+### resultaten
+Hieronder ziet u de resultaten in de seriële monitor van de Arduino:
+
+![image](https://github.com/BasMaes/Linefollower/assets/146442899/864d791f-76e1-40bd-9c09-907cc9b5ea4e)
+
+Hieronder ziet u de resultaten in de Serial Bluetooth Terminal app, hier ziet u welke commando's ik heb verstuurd naar de arduino en omgekeerd.
+
+![image](https://github.com/BasMaes/Linefollower/assets/146442899/9e935a95-63a8-4e40-a387-0139485456c1)
+
+
 
