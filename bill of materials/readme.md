@@ -1,5 +1,5 @@
 ## bill of materials
-<br />
+
 
 |volgnummer|naam            |omschrijving                                                             |nieuw/recup|kostprijs/stuk|aantal|subtotaal|
 |         1|IR Sensor       |8 channel TCRT5000 IR Photoelectric Line Track Module QTR-8A             |nieuw      |€1,45         |1     |€1,45    |
