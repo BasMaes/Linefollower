@@ -1,63 +1,83 @@
-const int IN1 = 7;
-const int IN2 = 8;
-const int IN3 = 4;
-const int IN4 = 5;
+// Define the control inputs
+#define MOT_A1_PIN 5
+#define MOT_A2_PIN 6
+#define MOT_B1_PIN 11
+#define MOT_B2_PIN 10
 
+void setup(void)
+{
+  // Set all the motor control inputs to OUTPUT
+  pinMode(MOT_A1_PIN, OUTPUT);
+  pinMode(MOT_A2_PIN, OUTPUT);
+  pinMode(MOT_B1_PIN, OUTPUT);
+  pinMode(MOT_B2_PIN, OUTPUT);
 
+  // Turn off motors - Initial state
+  digitalWrite(MOT_A1_PIN, LOW);
+  digitalWrite(MOT_A2_PIN, LOW);
+  digitalWrite(MOT_B1_PIN, LOW);
+  digitalWrite(MOT_B2_PIN, LOW);
 
-void setup() {
-  pinMode(IN1, OUTPUT);
-  pinMode(IN2, OUTPUT);
-  pinMode(IN3, OUTPUT);
-  pinMode(IN4, OUTPUT);
+  // Initialize the serial UART at 9600 baud
+  Serial.begin(9600);
 }
 
-void loop() {
-  // Bestuur motor1
-  digitalWrite(IN1, HIGH);
-  digitalWrite(IN2, LOW);
+void loop(void)
+{
+  // Motoren van stop naar max snelheid.
+  for (int i = 0; i < 256; i++) {
+    spin_and_wait(i, i, 25);
+  }
+  // max snelheid.
+  spin_and_wait(255,255,2000);
 
-  delay(2000); // Draai motor1 vooruit gedurende 2 seconden
+  // Motoren van max snelheid naar stop.
+  for (int i = 0; i < 256 ; i++) {
+    spin_and_wait(255 - i, 255 - i, 25);
+  }
 
-  // Stop motor1
-  digitalWrite(IN1, LOW);
-  digitalWrite(IN2, LOW);
+  // max snelheid reverse.
+  spin_and_wait(-255,-255,2000);
 
-  delay(1000); // Wacht 1 seconde
+  // Stop.
+  spin_and_wait(0,0,2000);
 
-  // Bestuur motor1 achteruit
-  digitalWrite(IN1, LOW);
-  digitalWrite(IN2, HIGH);
+  // Max snelheid met motoren in andere richting.
+  spin_and_wait(-255, 255, 2000);
+  spin_and_wait(0, 0, 1000);
+  spin_and_wait(255, -255, 2000);
+  spin_and_wait(0, 0, 1000);
+}
 
-  delay(2000); // Draai motor1 achteruit gedurende 2 seconden
+//Zet de juiste pin low als de richting veranderd.
+void set_motor_pwm(int pwm, int IN1_PIN, int IN2_PIN)
+{
+  if (pwm < 0) {  // reverse speeds
+    analogWrite(IN1_PIN, -pwm);
+    digitalWrite(IN2_PIN, LOW);
 
-  // Stop motor1
-  digitalWrite(IN1, LOW);
-  digitalWrite(IN2, LOW);
+  } else { // stop or forward
+    digitalWrite(IN1_PIN, LOW);
+    analogWrite(IN2_PIN, pwm);
+  }
+}
 
-  delay(1000); // Wacht 1 seconde
+//Geeft weer welke snelheid wordt doorgestuurd.
+void set_motor_currents(int pwm_A, int pwm_B)
+{
+  set_motor_pwm(pwm_A, MOT_A1_PIN, MOT_A2_PIN);
+  set_motor_pwm(pwm_B, MOT_B1_PIN, MOT_B2_PIN);
 
-  // Bestuur motor2
-  digitalWrite(IN3, HIGH);
-  digitalWrite(IN4, LOW);
+  // Print a status message to the console.
+  Serial.print("Set motor A PWM = ");
+  Serial.print(pwm_A);
+  Serial.print(" motor B PWM = ");
+  Serial.println(pwm_B);
+}
 
-  delay(2000); // Draai motor2 vooruit gedurende 2 seconden
-
-  // Stop motor2
-  digitalWrite(IN3, LOW);
-  digitalWrite(IN4, LOW);
-
-  delay(1000); // Wacht 1 seconde
-
-  // Bestuur motor2 achteruit
-  digitalWrite(IN3, LOW);
-  digitalWrite(IN4, HIGH);
-
-  delay(2000); // Draai motor2 achteruit gedurende 2 seconden
-
-  // Stop motor2
-  digitalWrite(IN3, LOW);
-  digitalWrite(IN4, LOW);
-
-  delay(1000); // Wacht 1 seconde
+//De functie waarin we de motorsnelheid van de 2 motoren kunnen doorsturen.
+void spin_and_wait(int pwm_A, int pwm_B, int duration)
+{
+  set_motor_currents(pwm_A, pwm_B);
+  delay(duration);
 }
