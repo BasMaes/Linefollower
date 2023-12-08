@@ -12,6 +12,7 @@
 |         8|Batterij        |EVE 18650 Li-ion Batterij - 3100mAh - 10A - INR18650-33V                 |nieuw      |€3.50         |2     |€7       |
 |         9|U-regelaar 5V   |78L05 5V Spanningsregelaar - T092                                        |nieuw      |€0.35         |1     |€0.35    |
 |        10|chassis         |                                                                         |recup      |€0            |1     |€0       |
+|        11|HC-05           |bluetooth module                                                         |nieuw      |€2.49         |1     |€2.49    |
 
 
-                                                                                                                                 totaal€35.77   
+                                                                                                                                 totaal: €38.26   
